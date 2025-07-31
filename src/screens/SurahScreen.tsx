@@ -1,9 +1,31 @@
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
+// src/screens/SurahScreen.tsx
 
-const SurahScreen = ({ route }) => {
+import { RouteProp } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import { RootStackParamList } from '../../App';
+
+type SurahScreenRouteProp = RouteProp<RootStackParamList, 'Surah'>;
+
+type Props = {
+  route: SurahScreenRouteProp;
+};
+
+type Verse = {
+  id: number;
+  text: string;
+  transliteration: string;
+};
+
+const SurahScreen = ({ route }: Props) => {
   const { surahName, surahLink } = route.params;
-  const [verses, setVerses] = useState([]);
+  const [verses, setVerses] = useState<Verse[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -11,7 +33,7 @@ const SurahScreen = ({ route }) => {
       try {
         const response = await fetch(surahLink);
         const data = await response.json();
-        setVerses(data.verses || []);
+        setVerses(data.verses as Verse[]);
       } catch (error) {
         console.error('Failed to fetch surah:', error);
       } finally {
@@ -45,24 +67,24 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginVertical: 12,
+    marginBottom: 16,
   },
   verseContainer: {
-    marginBottom: 24,
+    marginBottom: 20,
     borderBottomWidth: 1,
-    borderColor: '#ddd',
-    paddingBottom: 8,
+    borderBottomColor: '#eee',
+    paddingBottom: 10,
   },
   arabic: {
     fontSize: 22,
     textAlign: 'right',
-    lineHeight: 34,
-    marginBottom: 6,
+    marginBottom: 4,
+    lineHeight: 32,
   },
   transliteration: {
     fontSize: 16,
     fontStyle: 'italic',
-    color: '#555',
+    color: '#666',
   },
 });
 
